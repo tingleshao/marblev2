@@ -33,10 +33,10 @@ def main():
         output = output + v1 + ", " + v2 + ", " + v3.strip() + ", \n"
     output = output + "\n\n"
     for v in f_lst:
-        v1 = v.split(" ")[1]
-        v2 = v.split(" ")[2]
-        v3 = v.split(" ")[3]
-        output = output + v1 + ", " + v2 + ", " + v3.strip() + ", \n"
+        v1 = v.split(" ")[1].split("//")[0]
+        v2 = v.split(" ")[2].split("//")[0]
+        v3 = v.split(" ")[3].split("//")[0]
+        output = output + str(int(v1)-1) + ", " + str(int(v2)-1) + ", " + str(int(v3.strip())-1) + ", \n"
     output = output + "\n\n"
     for i in range(len(f_lst)/3):
         output = output + "0.0, 0.0, 0.0, 0.1, 0.1, 0.0,\n"

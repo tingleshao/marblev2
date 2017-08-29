@@ -26,14 +26,18 @@ def main():
         v2 = float(vn.split(" ")[2]) * -1
         v3 = float(vn.split(" ")[3]) * -1
         vv = [v1,v2,v3]
-        output = output + "vn " +  " ".join(str(vv)) + "\n"
+        output = output + vn + "\n"
     for f in f_lst:
         v1 = f.split(" ")[1].split("//")[0]
         v2 = f.split(" ")[2].split("//")[0]
         v3 = f.split(" ")[3].split("//")[0]
         v4 = f.split(" ")[4].split("//")[0]
-        output = output + "f " + v1 + " " + v4 + " " + v3 + "\n"
-        output = output + "f " + v1 + " " + v3 + " " + v2 + "\n"
+        vn1 = f.split(" ")[1].split("//")[1].strip()
+        vn2 = f.split(" ")[2].split("//")[1].strip()
+        vn3 = f.split(" ")[3].split("//")[1].strip()
+        vn4 = f.split(" ")[4].split("//")[1].strip()
+        output = output + "f " + v1 + "//" + vn1 + " " + v2 + "//" + vn2 + " " + v3 + "//" + vn3 + "\n"
+        output = output + "f " + v1 + "//" + vn1 + " " + v3 + "//" + vn3 + " " + v4 + "//" + vn4 + "\n"
     with open("tri.obj", 'w') as output_file:
         output_file.write(output)
 
