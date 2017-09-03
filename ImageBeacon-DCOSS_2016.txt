@@ -1,0 +1,93 @@
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 11
+TITLE: Years-Long Binary Image Broadcast using Bluetooth Low Energy Beacons
+AUTHORS: Chong Shao, Shahriar Nirjon and Jan-Michael Frahm
+
+OVERALL EVALUATION: 0 (borderline paper)
+REVIEWER'S CONFIDENCE: 4 (high)
+
+----------- Review -----------
+this paper describes how to reuse BLE beacons to convey information over very long timescales in a energy efficient way.  the paper is leveraging a niche property and describing the concepts, challenges as well as an experimental evaluation. as such this is a surprising and unanticipated niche idea. it's reuse and practicality are clearly limited but the paper makes a nice effort in showing a real end to end application use case. the main argument this paper is built upon are the very long timescales (years...) but the eval is  based on human-walking-around type of settings. therefore it would be helpful to see at least a bit of a model extrapolation to very long times, very long delays, non-periodic interaction patterns etc.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 11
+TITLE: Years-Long Binary Image Broadcast using Bluetooth Low Energy Beacons
+AUTHORS: Chong Shao, Shahriar Nirjon and Jan-Michael Frahm
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- Review -----------
+Paper Strengths:
+
+- The paper shows the design and evaluation of a binary image compression and transmission using BLE beacons, and evaluates the system in a real-world deployment scenario.
+
+- The paper successfully demonstrates a full system with experimental evaluation and a user study as well.
+
+- The paper is well written and easy to follow.
+
+=======
+Paper weakness:
+
+- The demonstrated outcome sounds trivial and not so interesting. Why do we care about receiving tiny and low quality binary icons (64x64)? If we are targeting a graphical navigation application, then we could use something way simpler as sending short text with indices of symbols that could be encoded in the font of the GUI application. I mean, there are fonts or image libraries that you can use to better demonstrate the information you could need than sending low quality tiny icons. I understand that the goal is to have a compression algorithm that does not utilise before-hand knowledge of images, but the evaluated scenario is not convincing.
+
+- The demonstrated compression algorithm is not so convincing, and the authors rightly comment about the possible advantage of using DCT compression in the appendix.
+
+- I expected to see a comparison to some other state-of-the-art binary image compression techniques rather than a comparison to JPEG.
+
+- Some details are missing, like how do you come up with the expected life-time? This is not explained anywhere.  Some equation of the energy consumption, etc. is interesting.
+
+- In Section 3.A, you state that a JPEG compression of 64x64 binary image is between 400B-2KB. This is really strange since the size of the raw image is about 64 x 8 = 512B. If the headers take that much space, then your comparison to JPEG is not suitable.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 11
+TITLE: Years-Long Binary Image Broadcast using Bluetooth Low Energy Beacons
+AUTHORS: Chong Shao, Shahriar Nirjon and Jan-Michael Frahm
+
+OVERALL EVALUATION: 2 (accept)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- Review -----------
+This paper proposes a image beacon system that is capable of broadcasting binary images over a very
+long period using a set of BLE devices. A prototype system is implemented to show the viability of the system in indoor navigation application
+
+The Strengths: the paper clearly presents the key algorithm design for image encoding and decoding. Specially, the patch-based image encoding algorithm is adopted and its feasibility is demonstrated
+
+The weakness:  although the proposed systems aims to combine a single image from multiple BLE devices, the indoor navigation application did not exploit such feature, where each BLE device contains one image. In addition, author claims that such system can keep operating for 2 years. There is not sufficient justifications for such claim.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 11
+TITLE: Years-Long Binary Image Broadcast using Bluetooth Low Energy Beacons
+AUTHORS: Chong Shao, Shahriar Nirjon and Jan-Michael Frahm
+
+OVERALL EVALUATION: 0 (borderline paper)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- Review -----------
+In this paper, the structure of proposed image beacon system is introduced. This system aims at broadcasting pre-set images through low-power Bluetooth devices in a long time period (in the unit of years) to provide user information in scenarios that images are most suitable for this purpose. A set of evaluations are taken and performance of aspects of proposed system (e.g, proposed algorithm on figure encoding and decoding) is discussed.
+
+This paper has a good structure and experiments on real deployment are interesting. However, there are several issues needed to be handled in this paper before it can be published. Issues listed below follows section sequences of paper.
+
+1. In section II, it is announced that “We assume that the system is self-contained, i.e., no additional information about the broadcasted image is available from any other sources globally (on the web) or locally (on the smartphone).”. However, throughout all the sections it is vague to see why this assumption is necessary for research depicted in this paper. Similarly, it is not clear about what does “the payload does not allow certain special characters” mean in section II.A.
+
+2. In section IV, a patch set generation algorithm is proposed based on dividing and indexing part of spiral images. However, motivation on selecting the spiral image as on generating patches is not straightforward. The question that why authors do not choose other curve images is not answered.
+
+3. In section V. JPEG encoding is chosen as the comparison group of proposed algorithm. However, based on section VII, there are better choices such as chain coding based compression which could make comparison result more representative. Reason on why JPEG is selected is not given throughout this section.
+
+4. In section V.A, it is announced that three types of images (i.e. alpha-numerical characters, basic shapes, and arbitrary binary images) are selected. However, except results are shown in Fig. 10, how data points obtained in remaining figures is not mentioned.
+
+If data is gathered in the way that for each case, all images are tested and results are averaged, it is possible that performance is over-estimated due to bias on samples. The reason for this overestimation could be that proposed patching scheme does not work well with arbitrary figures while the total amount of arbitrary figures are relatively fewer than other two types of images so average value of other two types of image dominates in the final result. At the same time, it may not affect that much for the JPEG-based scheme, which indicates one benefit of using JPEG in some cases.
+
+If data is gathered in the way that for each case, one specific image is used for all groups, then information on which figure is used for which groups of results is needed for the reader to further investigate the performance of proposed scheme.
+
+5. In section V.B, several issues are discussed including “Effect of Image Type”, “Effect of Number of Beacon Devices”, etc. However, for each of these subsections, parameters used in the evaluation are totally missed, which leads to confusion when the reader attempts to put results from different subsections together to get a more comprehensive understanding of the performance of proposed system. For example, by putting Fig. 8 and Fig. 9 together, it is unknown how different type of images playing a role in the decrement of quality in Fig. 9, while how selecting simpler images (i.e. ones belonging to alphanumeric and basic shape classes) could help fight lower beacon frequency for a longer lifetime.
+
+6. In section V.E, it is announced that MNIST is used as the comparison group of proposed algorithm. However, there is no evidence which can convince the reader that this comparison is fair since MNIST a dataset on digit images written by different writers rather than a general-purpose dataset for types of figures testing here. This leads to the consequence that even it shows that when handling with basic shapes proposed algorithm outperforms MNIST-based algorithm, it still fails to prove that proposed algorithm has good performance since MNIST is not for this purpose.
+
+7. In section V.F, a group of experiments on which k should be picked is described. However, based on data shown here, it is not convincing to make the conclusion that k = 64 is best since, by examining trends of curves when k = 16, 32 and 64 respectively, it is also possible that when k = 128, a better performance can be obtained.
+
+8. In section VI, a set of experiments on real deployment is depicted and results are discussed. However, some important details on experiments introduced in this section are missed, which makes results shown here less convincing. For example, in section VI.A, 12 participants are involved in the experiment. However, there is no information on how these 12 participants are selected. Without this piece of information, it is unknown whether reason raised for explaining results in Fig. 14 in the paper make sense or results are caused by selection bias.

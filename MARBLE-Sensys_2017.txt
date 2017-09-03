@@ -1,0 +1,120 @@
+
+
+===========================================================================
+                           SenSys 17 Review #32A
+---------------------------------------------------------------------------
+       Paper #32: MARBLE: Mobile Augmented Reality Using BLE Beacons
+---------------------------------------------------------------------------
+
+                 Reviewer expertise: 4. Expert
+
+                           ===== Strengths =====
+
+- This paper proposed a novel design of AR using BLE beacons' broadcasts.
+
+- Feasibility are well evaluated.
+
+                          ===== Weaknesses =====
+
+- Very limited technical contributions. 3D data processing, localization (based on RSS and vision) and object rendering
+are standard approaches. (Kalman/particle filter based) Fusing IMU data and images to estimate camera pose has been investigated before.
+
+- The scenario considered in the paper is not sufficiently convincing.
+
+                         ===== Paper summary =====
+
+This paper proposed a mobile AR system using BLE beacons' broadcasts as the data input for local rendering. Estimated location is used to target specific AR users. 3D object features
+that are used in broadcasting are reduced due to limited BLE packet capacity and lifetime of beacon battery.
+
+                      ===== Comments for author =====
+
+- The use case is novel and impressive. The authors may be motivated by the advantages of BLE beacon broadcasting and thereby introduce them into motion capturing scenarios. Some other AR applications conduct features matching or even scan QR codes, containing thousands of bytes, and then render 3D objects. Since if the assumption in the paper is that the recording of the motions happens rarely, QR code could be also used instead of BLE beacon broadcasting. Readers could be more convinced if the authors can describe why the proposed mechanism is better and provide detailed comparison.
+
+- Another concern is that the experiment site in the paper is small (~35m^2) and cameras maybe easy to capture the motions of person of interest. However the authors consider "motion capture scenario where a user (e.g. an actor, a doctor, or a lecturer)" acts normally. Does site area size affect the system  performance? The authors consider 5 "big" gesture motions in Sec 6.2.5.  Is the proposed system capable to capture a doctor's subtle hand movements, for example, during a surgery，according to scenarios concerned in the paper?
+
+- How did you get the "reduction of computation time by almost 40%" in Sec 6.2.2 should be detailed.
+
+- There should be necessary supporting citations for the claims in the first paragraphs in Section 1.
+
+- There are numerous spelling errors, typos and inconsistency in wording. (e.g. 8"X" in Sec 1 vs. 8"times" in sec 3.1; "connectionless" vs. "connection-less"; "right button" in Fig. 12; grammar mistake in the 2nd paragraph in Sec 2)
+
+                      Overall merit: 2. Weak reject
+
+===========================================================================
+                           SenSys 17 Review #32B
+---------------------------------------------------------------------------
+       Paper #32: MARBLE: Mobile Augmented Reality Using BLE Beacons
+---------------------------------------------------------------------------
+
+                 Reviewer expertise: 2. Some familiarity
+
+                           ===== Strengths =====
+
++ A working system for Augmented Reality using the limited bandwidth of BLE beacons.
+
+                          ===== Weaknesses =====
+
+- Limited novelty. The methods look like an incremental use of image processing techniques.
+- Unclear motivation. The authors pose an elaborated but impractical research problem.
+- No cohesiveness in the presentation of the solutions. The solutions related to BLE localization do not seem to add any meaningful improvement.
+- Weak positioning within the related work.
+
+                         ===== Paper summary =====
+
+The authors propose an offline distributed mechanism for augmented reality (AR). The idea is to put a set of cameras at different points. These cameras have BLE chips. The cameras identify key features in their images (related to the background and a moving person).  These features are broadcasted continuously by the BLE beacons. Later, when a user comes with a smartphone, the phone merges the information broadcasted by the beacons with the images collected from its own camera, to provide the user with a virtual representation of the moving person that was in the room.
+
+                      ===== Comments for author =====
+
+The authors put a good effort in implementing this system. Unfortunately, the paper has many caveats.
+
+1) Incremental application of image processing. In essence the authors use well-known methods from image processing (i) to obtain a small number of salient features from different viewing angles, and (ii) to pinpoint the position and direction of users based on the images they observe. Due to the limited bandwidth of BLE, only a few reference features can be broadcasted by the beacons. The authors claim as one of their key contributions the identification of four salient features. How novel is this finding in the image processing community? It seems to be a relatively easy task to accomplish considering that the authors use existing implementations of the required algorithms, such as OpenCV. The related work section presents almost no studies related to this point (weak positioning within SoA).
+
+2) Artificial problem. By constraining themselves to the limited data rate of BLE, the authors are creating an artificial problem. Most of the energy is consumed by image processing, so why not send more packets when a user enters the room? The authors could use PIR sensors on each node to detect changes in the environment, and power up their nodes only on those occasions (the rest of the time they could be in idle mode). The information presented in Fig 10 is a bit misleading. It seems to consider a single image processing event, but packet broadcasts for a year. That would be a very unlikely scenario (only one event to be captured per year ?!).
+
+3) Unclear presentation of solutions. Throughout the paper the authors highlight the importance of BLE localization, but this localization component seems to play a marginal role at best. There is little difference between the fusion approach and the camera-only approach (Figure 13). Furthermore the authors do not explain the training process. How much effort is it required to achieve this accuracy? How often does it need to be updated? Instead of showing the heat maps it would be use to show actual error values to quantify the benefit of BLE localization.
+
+4) Poor related work. The main concepts in this paper are related to image processing not to localization. But the authors use more than two thirds of the Related Work section to describe studies related to RSS localization. The enumeration of these studies looks a bit out of place, considering that BLE localization plays a minor role in the performance of the system. I was expecting a more thorough analysis of AR methods, but the authors only devote a small paragraph without highlighting the novelty of their work within this domain.
+
+
+Other comments:
+
+- Show something like Figure 6 at the beginning. The basic setup needs to be presented up front. In the first pages it is not clear if you use only one camera and many BLE beacons, or one camera per BLE beacon (later it becomes clear that it is the latter case).
+
+- Comparing your feature selection with a random selection looks like a straw-man comparison, aren't there other methods?
+
+                      Overall merit: 2. Weak reject
+
+===========================================================================
+                           SenSys 17 Review #32C
+---------------------------------------------------------------------------
+       Paper #32: MARBLE: Mobile Augmented Reality Using BLE Beacons
+---------------------------------------------------------------------------
+
+                 Reviewer expertise: 2. Some familiarity
+
+                           ===== Strengths =====
+
++ explore a limit of mobile augmented reality by investigating whether BLE beacons suffice for carrying 3D information
++ implementation of an integrated system
+
+                          ===== Weaknesses =====
+
+- presentation not easy to follow
+- the system is an integration of existing techniques
+- while the question of whether BLE beacons can carry sufficient 3D information sounds interesting, the designed system in this paper is a toy example that lacks practical meaning/value
+
+                         ===== Paper summary =====
+
+This paper designs a mobile augmented reality system to demonstrate that the BLE beacon can carry sufficient 3D information for some AR applications. In the designed system, using the 3D information broadcast by the BLE beacons, an AR viewer can identify the gestures of the augmented avatars. Various system aspects are evaluated, such as power consumption and the projected lifetime under various configurations.
+
+                      ===== Comments for author =====
+
+While the question asked in this paper (i.e., whether BLE beacons suffice for carrying 3D info for AR) is interesting, the system designed in this paper is purely for demonstrating such a possibility, without practical applications discussed. The beacons can only carry very limited information such that the system can only support very basic tasks (e.g., gesture recognition evaluated in the paper). The paper should discuss/evaluate how these basic functions help real-world AR applications.
+
+The paper integrates various existing techniques and does not make novel contributions to each of them. The main effort is the overall system integration to show what are achievable using BLE beacons.
+
+The writing of the paper sometimes is fragmented and difficult to follow. The descriptions in the main technical sections (Section 3 and 4) are quite high-level and abstract.
+
+The paper gives the gesture recognition accuracy in Fig 15. It will help understanding if some example pictures of the rendering are provided.
+
+                      Overall merit: 2. Weak reject

@@ -1,0 +1,122 @@
+===========================================================================
+                          IoTDI 2017 Review #62A
+---------------------------------------------------------------------------
+Paper #62: ImageBeacon: Broadcasting Color Images over Connectionless
+           Bluetooth LE Packets
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+                 Reviewer expertise: 3. Knowledgeable
+
+                         ===== Paper summary =====
+
+This work describes a BLE “beacon system” that uses a set of multiple BLE beacons that jointly broadcast an image in a local area. The work assumes no supporting infrastructure; i.e., it is entirely self contained within the beacons and the devices that receive those beacons. The authors prototype and deploy the system, then perform an evaluation that includes feedback from real users. This work is a continuation of the work in [14] (acknowledged by the authors), but enables the broadcasting of color images of arbitrary content (whereas the work in [14] had significant limitations on image content).
+
+                      ===== Comments for author =====
+
+Strengths:
+The problem is very well introduced and motivated. I am convinced that we want this to work.
+
+The idea of using multiple beacons in a more complex “beacon system” to achieve what one would intuitively attempt with just a single beacon is an innovative idea.
+
+The IMU-assisted multiple view capture technique is clever and appears to work well.
+
+
+Weaknesses:
+The compression algorithm requires some extra work on the user’s part (taking multiple pictures, providing input to the parameterization), which may be too much of a burden for some of the paper’s use cases.
+
+Comments:
+Where does the limitation of 18byte beacons come from? The devices we work with allow about 30 bytes. Are you assuming some additional software stack that has some additional overhead? Can you reclaim it?
+
+Section II jumps right into the formal (mathematical) problem formulation. It’s very jarring and the surrounding text does not do a good job of intuitively explaining what’s going on. Careless writing/typing also gets in the way. (For instance the first sentence says that each pixel is represented by b bit… this was confusing until I realized that the authors meant “by b bits” … note the s!)
+
+Several of the techniques make me wonder how specific the approach (and its performance) is to a given piece of hardware. How well will it work on inexpensive smartphones?
+
+I do not follow the description that surrounds Equation 4 (the crux of the depth-refined segmentation). For a simple example of my confusion, the text says that C compares two regions, where Wi is the region (in the image?) while D is “the foreground region in the depth based segmentation.” [An aside; what is the depth-based segmentation, and how is that different than “depth-refined segmentation”?] What is the comparison that is done in Eq. 4? How is it guaranteed that the regions are even comparable? What does it mean for pixels to be common across regions?
+
+In reading through sections IV through VI, I’m actually unclear as to what the requirements are for the final image. How big can it be? The discussion of the tradeoffs between BLE 4.0 and BLE 5.0 and the implication that the image is going to somehow be jointly distributed by the beacon system leave the exact requirements undefined.
+
+In describing the experimental setup, I feel like the particular beacon (the estimote) matters much less than the Android phone (Nexus 5) that is running the software. What in particular is specific about the approach to the estimote (i.e., what would the authors expect to change if a different beacon technology were used)?
+
+When we get to the experimental setup, what we don’t have is a clear description of what the authors intend as the “beacon system”. Is the idea that the phone just has to come within range of one beacon with the data, or is it somehow assembling pieces received for multiple beacons? Or are the multiple beacons just around for purposes of increasing the throughput? This confusion is compounded by the fact that the authors are not consistent with terminology in the paper (for instance, just before Equation 5, the paper says that the data is written to a beacon, but the paper goes back to using the term “beacon system” in the evaluation section.
+
+I do not understand how the results in Figure 11 are generated. There are humans involved here, right? (In terms of the “miss” rating?) Who was taking these photos, and is that person representative of an actual use case? Also, four tests total is a very low sample size!
+
+There are a lot of English grammar errors in the paper; it needs a careful proofreading. There are also just some sloppy typos (e.g., ourdoor).
+
+Please define the IoU metric.
+
+It’s nice that there’s a user study, but I’m not sure that the study is really asking the important questions. What the information coming out is is not about the beacon system at all really (it’s not even necessary to use it!) but about the image compression quality. It would be much more interesting to get information from the users about their reactions to the tradeoffs (e.g., the time it takes to assemble an image vs. the quality of that image).
+
+           Suitable for short paper: 2. Suitable
+
+===========================================================================
+                          IoTDI 2017 Review #62B
+---------------------------------------------------------------------------
+Paper #62: ImageBeacon: Broadcasting Color Images over Connectionless
+           Bluetooth LE Packets
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+                 Reviewer expertise: 2. Some familiarity
+
+                         ===== Paper summary =====
+
+The paper established a model to optimize so called "color image beacon" systems. Performance data show that the proposed method can result in a good lifetime of the system and high quality of images. The work is an extension of their own paper published in 2016 [14]. I could not understand why the authors did not mention their own work [14] in the current version of this paper.
+
+           Suitable for short paper: 2. Suitable
+
+===========================================================================
+                          IoTDI 2017 Review #62C
+---------------------------------------------------------------------------
+Paper #62: ImageBeacon: Broadcasting Color Images over Connectionless
+           Bluetooth LE Packets
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+                 Reviewer expertise: 3. Knowledgeable
+
+                         ===== Paper summary =====
+
+In this paper, the authors propose an image processing method for instant image broadcasting based on BLE beacon in the environment with many BLE beacons. The authors say that the current image compression methods are not suitable for making small (e.g. less than 256 byte) images which is suitable for BLE beacons. The proposed method consists of three main steps: takes multiple view pictures with IMU support, find the foreground of pictures based on the depth information of the pictures, and generate three different picture candidates for users by encoding the foreground and the background parts separately. The authors performed  experiments which show that the proposed method is more useful than the current JPEG compression when it  aims at an image of 800 bytes or less, and the user can distinguish the photos of different objects if three or more BLE beacons are supported.
+
+                      ===== Comments for author =====
+
+The authors are dealing with an interesting topic. The paper is written well and easy to understand. However, there are rooms for improvement.
+
+First of all, it would be good to add some explanation about why the instant image distribution using the BLE beacon is important and how it will be used.  To me, the scenarios presented in the paper are very brief and somewhat ambiguous. For example,  the authors simply mention "coordinating rescue workers in disaster area scenario”, which is not enough. It would be better to add more discussion on the future applications.
+
+Also, it would be good to explain the design of IMU assisted view capture in more detail.  It seems that getting depth information based on multiple photos is to distinguish the foreground with user’s main interest and the background with less interest.  Then, I think a user could also directly select the foreground and background of the image if the user intervene the process in any ways. It would be nice to present more clearly the rationale of their design choices in the design process.
+
+           Suitable for short paper: 1. Not suitable
+
+===========================================================================
+                          IoTDI 2017 Review #62D
+---------------------------------------------------------------------------
+Paper #62: ImageBeacon: Broadcasting Color Images over Connectionless
+           Bluetooth LE Packets
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+                 Reviewer expertise: 2. Some familiarity
+
+                         ===== Paper summary =====
+
+This paper focuses on an interesting topic of broadcasting color images through Bluetooth Low Energy (BLE) beacon devices. The technical challenge of broadcasting color images with BLE come from the fact that current BLE beacon color has limited broadcasting rate and capacity and it is difficult to achieve high quality image through BLE under such limitations. To overcome this challenge, the authors proposed an image processing system which considers the background and foreground information of an image and applies adaptive encoding method to priority more important regions of an image during decoding. The proposed system is experimented via Estimote model REV.F2.3 Radio Beacon, and its experimental result is analyzed to verify the performance of proposed method.
+
+                      ===== Comments for author =====
+
+Overall, the paper is well-organized and easy to understand. But there exist some problems in the paper which impede better understanding.
+The problems of this paper are presented below:
+1.      In IV-C part, the authors apply trained regression tree model to decide whether current view is good. But they did not explain how to decide whether regression tree model is well trained or not in the paper. Besides, how often should they train regression tree model in the practice so that the model can keep high estimation accuracy.
+2.      In VII-B part, the authors say that IMU-guided system predicts a good pair and explain why the proposed system reduces the time significantly shown in Figure 11. But the authors do not explain why the time is different for Indoor and Outdoor images in Figure 11.
+3.      In VII-C part the authors manually generate the ground truth segmentation for each set, the authors need to explain how to do it so that the readers can easily understand how to get final results shown in Fig 12. Also, images are divided into four categories (Sign, Building, Indoor and Outdoor) and compared in Figure 12 while same images are divided into only two categories (Indoor and Outdoor) in Figure 11. Does it mean that IMU-guided system does not work for Sign and Building images?
+4.      In VII-D part, the authors only choose JPEG for the comparisons in the experiment. But there are other kinds of existing images such as JPEG2000 and PNG. The authors need to show the advantages of JPEG if only JPEG is selected for the comparisons.
+5.      In VII-D part, the authors say that proposed method outperforms JPEG if compressed image size is about 800 bytes. But JPEG has better performance than proposed method if image size is larger than 800 bytes. If the maximum size the BLE allows when broadcasting the color image is larger than 800 bytes, what will be the advantage of the proposed method compared with JPEG?
+6.      In Figure 15, battery life for 2 beacons is almost twice as the battery life for 1 beacon while battery life for 2 beacons is almost same as battery life for 3 beacons. The authors need to explain the reasons.
+7.      There are several minor errors the authors should double check the paper before submission:
+a)      In V-A part: as the it looks for -> “the” should be deleted
+b)      In V-A part: on the image pair that correspond to -> on the image pair that corresponds to
+c)      In VI-C part: The parameters of are chosen -> The parameters are chosen.
+
+           Suitable for short paper: 2. Suitable
