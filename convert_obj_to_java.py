@@ -7,7 +7,40 @@ def main():
     with open(filename, 'r') as file:
         input_txt = file.read()
     lines = input_txt.split("\n")
-    output = ""
+    tex_coord_output = ""
+    normal_output = ""
+    face_output = ""
+    output = """
+    import android.util.Log;
+
+import java.nio.Buffer;
+
+public class Hand extends MeshObject{
+
+    private Buffer mVertBuff;
+    private Buffer mTexCoordBuff;
+    private Buffer mNormBuff;
+    private Buffer mIndBuff;
+
+    private int indicesNumber = 0;
+    private int verticesNumber = 0;
+
+
+    public Hand() {
+        setVerts();
+        setTexCoords();
+        setNorms();
+        setIndices();
+        Log.d("DDL", "vert length:" + Integer.toString(verticesNumber));
+
+        Log.d("DDL", "ind length:" + Integer.toString(indicesNumber));
+
+    }
+
+    private void setVerts()
+    {
+        double[] HAND_VERTS = {
+    """
     v_lst = []
     vn_lst = []
     f_lst = []
@@ -26,21 +59,91 @@ def main():
         v3 = v.split(" ")[3]
         output = output + v1 + ", " + v2 + ", " + v3.strip() + ", \n"
     output = output + "\n\n"
+    output = output + """
+            };
+        mVertBuff = fillBuffer(HAND_VERTS);
+        verticesNumber = HAND_VERTS.length / 3;
+    }
+
+    private void setTexCoords() {
+        double[] HAND_TEX_COORDS = {"""
     for v in vn_lst:
         v1 = v.split(" ")[1]
         v2 = v.split(" ")[2]
         v3 = v.split(" ")[3]
-        output = output + v1 + ", " + v2 + ", " + v3.strip() + ", \n"
-    output = output + "\n\n"
+        normal_output = normal_output + v1 + ", " + v2 + ", " + v3.strip() + ", \n"
+
     for v in f_lst:
         v1 = v.split(" ")[1].split("//")[0]
         v2 = v.split(" ")[2].split("//")[0]
         v3 = v.split(" ")[3].split("//")[0]
-        output = output + str(int(v1)-1) + ", " + str(int(v2)-1) + ", " + str(int(v3.strip())-1) + ", \n"
-    output = output + "\n\n"
+        face_output = face_output + str(int(v1)-1) + ", " + str(int(v2)-1) + ", " + str(int(v3.strip())-1) + ", \n"
     for i in range(len(f_lst)/3):
-        output = output + "0.0, 0.0, 0.0, 0.1, 0.1, 0.0,\n"
-    with open("java_data.txt", 'w') as output_file:
+        tex_coord_output = tex_coord_output + "0.0, 0.0, 0.0, 0.1, 0.1, 0.0,\n"
+
+    output = output + tex_coord_output
+    output = output + "\n\n"
+    output = output + """        };
+        Log.d("DDL", "tex length:" + Integer.toString(HAND_TEX_COORDS.length));
+
+        mTexCoordBuff = fillBuffer(HAND_TEX_COORDS);
+    }
+
+    private void setNorms()
+    {
+       double[] HAND_NORMS = {"""
+
+    output = output + normal_output
+    output = output + "\n\n"
+    output = output + """      };
+        Log.d("DDL", "norm length:" + Integer.toString(HAND_NORMS.length));
+
+        mNormBuff = fillBuffer(HAND_NORMS);
+    }
+
+    private void setIndices() {
+        short[] HAND_INDICES = {"""
+
+    output = output + face_output
+
+    output = output + """       };
+        mIndBuff = fillBuffer(HAND_INDICES);
+        indicesNumber = HAND_INDICES.length;
+    }
+
+    public int getNumObjectIndex() {
+        return indicesNumber;
+
+    }
+
+    @Override
+    public int getNumObjectVertex() {
+        return verticesNumber;
+    }
+
+    @Override
+    public Buffer getBuffer(BUFFER_TYPE bufferType) {
+        Buffer result = null;
+        switch (bufferType) {
+            case BUFFER_TYPE_VERTEX:
+                result = mVertBuff;
+                break;
+            case BUFFER_TYPE_TEXTURE_COORD:
+                result = mTexCoordBuff;
+                break;
+            case BUFFER_TYPE_NORMALS:
+                result = mNormBuff;
+                break;
+            case BUFFER_TYPE_INDICES:
+                result = mIndBuff;
+            default:
+                break;
+        }
+        return result;
+    }
+}
+"""
+    with open("java_model_data.java", 'w') as output_file:
         output_file.write(output)
 
 
