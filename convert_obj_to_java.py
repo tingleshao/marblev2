@@ -4,6 +4,9 @@ import sys
 
 def main():
     filename = sys.argv[1]
+    class_name = filename.split("/")[-1].split(".")[0]
+    class_name = class_name.split("_")[0][:-1] + class_name.split("_")[1]
+    class_name = class_name.title() 
     with open(filename, 'r') as file:
         input_txt = file.read()
     lines = input_txt.split("\n")
@@ -15,7 +18,7 @@ def main():
 
 import java.nio.Buffer;
 
-public class Hand extends MeshObject{
+public class """ + class_name + """ extends MeshObject{
 
     private Buffer mVertBuff;
     private Buffer mTexCoordBuff;
@@ -26,7 +29,7 @@ public class Hand extends MeshObject{
     private int verticesNumber = 0;
 
 
-    public Hand() {
+    public """ + class_name + """() {
         setVerts();
         setTexCoords();
         setNorms();
