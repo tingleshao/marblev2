@@ -143,6 +143,7 @@ public class Hand extends MeshObject{
     }
 }
 """
+
     with open("java_model_data.java", 'w') as output_file:
         output_file.write(output)
 
