@@ -5,8 +5,9 @@ import sys
 def main():
     filename = sys.argv[1]
     class_name = filename.split("/")[-1].split(".")[0]
+    output_file_name = class_name + ".java"
     class_name = class_name.split("_")[0][:-1] + class_name.split("_")[1]
-    class_name = class_name.title() 
+    class_name = class_name.title()
     with open(filename, 'r') as file:
         input_txt = file.read()
     lines = input_txt.split("\n")
@@ -147,7 +148,7 @@ public class """ + class_name + """ extends MeshObject{
 }
 """
 
-    with open("java_model_data.java", 'w') as output_file:
+    with open(output_file_name, 'w') as output_file:
         output_file.write(output)
 
 
