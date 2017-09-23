@@ -6,7 +6,6 @@ package org.v2.marble.marblev2;
 
 import com.vuforia.State;
 
-
 //  Interface to be implemented by the activity which uses SampleApplicationSession
 public interface SampleApplicationControl
 {
@@ -34,7 +33,7 @@ public interface SampleApplicationControl
 
     // To be called to deinitialize the trackers
     boolean doDeinitTrackers();
-    
+
     // This callback is called after the Vuforia initialization is complete,
     // the trackers are initialized, their data loaded and
     // tracking is ready to start
