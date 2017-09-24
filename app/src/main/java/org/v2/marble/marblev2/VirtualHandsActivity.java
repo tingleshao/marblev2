@@ -26,8 +26,18 @@ import java.util.Vector;
  */
 // TODO(chognshao): make it marker free
 // TODO(chongshao): implement SampleAppMenuInterface
+    //TODO(chongshao): init
 public class VirtualHandsActivity extends Activity implements SampleApplicationControl {
 
+    // Enumeration for masking button indices into single integer:
+    private static final int BUTTON_1 = 1;
+    private static final int BUTTON_2 = 2;
+    private static final int BUTTON_3 = 4;
+    private static final int BUTTON_4 = 8;
+
+    private byte buttonMask = 0;
+    static final int NUM_BUTTONS = 4;
+    public String virtualButtonColors[] = { "red", "blue", "yellow", "green" };
 
     private static final String LOGTAG = "DDL";
 
@@ -44,7 +54,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     SampleApplicationSession vuforiaAppSession;
 
-  //  private Vector<Texture> mTextures;
+    private Vector<Texture> mTextures;
 
     private AlertDialog mErrorDialog;
 
@@ -274,7 +284,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         mRenderer = new VirtualHandsRenderer(this, vuforiaAppSession);
 
         // TODO(chongshao): textures may be needed
-  //      mRenderer.setTextures(mTextures);
+        mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
 
     }

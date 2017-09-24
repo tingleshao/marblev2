@@ -398,10 +398,9 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     }
 
 
-//    public void setTextures(Vector<Texture> textures)
- //   {
-  //      mTextures = textures;
-
-  //  }
+    public void setTextures(Vector<Texture> textures)
+    {
+        mTextures = textures;
+    }
 
 }
