@@ -1,11 +1,15 @@
 package org.v2.marble.marblev2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.vuforia.CameraDevice;
+import com.vuforia.DataSet;
 import com.vuforia.ImageTarget;
 import com.vuforia.ObjectTracker;
 import com.vuforia.STORAGE_TYPE;
@@ -13,6 +17,9 @@ import com.vuforia.State;
 import com.vuforia.Trackable;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
+import com.vuforia.Vuforia;
+
+import java.util.Vector;
 
 /**
  * Created by chongshao on 9/21/17.
@@ -20,16 +27,36 @@ import com.vuforia.TrackerManager;
 // TODO(chognshao): make it marker free
 // TODO(chongshao): implement SampleAppMenuInterface
 public class VirtualHandsActivity extends Activity implements SampleApplicationControl {
+
+
+    private static final String LOGTAG = "DDL";
+
+    private DataSet dataSet = null;
+
+    private VirtualHandsRenderer mRenderer;
+
+    private SampleApplicationGLView mGlView;
+
+    private RelativeLayout mUILayout;
+
+    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(
+            this);
+
+    SampleApplicationSession vuforiaAppSession;
+
+  //  private Vector<Texture> mTextures;
+
+    private AlertDialog mErrorDialog;
+
+
+
     @Override
-    public void onVuforiaUpdate(State state)
-    {
+    public void onVuforiaUpdate(State state) {
         Log.d("DDL", "on Vuforia update called");
     }
 
-
     @Override
-    public boolean doDeinitTrackers()
-    {
+    public boolean doDeinitTrackers() {
         // Indicate if the trackers were deinitialized correctly
         boolean result = true;
 
@@ -149,9 +176,9 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
             if (!result)
                 Log.e(LOGTAG, "Unable to enable continuous autofocus");
 
-            mSampleAppMenu = new SampleAppMenu(this, this, "Virtual Buttons",
-                    mGlView, mUILayout, null);
-            setSampleAppMenuSettings();
+        //    mSampleAppMenu = new SampleAppMenu(this, this, "Virtual Buttons",
+        //            mGlView, mUILayout, null);
+        //    setSampleAppMenuSettings();
 
         } else
         {
@@ -232,5 +259,64 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         return result;
     }
 
+
+    // Initializes AR application components.
+    private void initApplicationAR()
+    {
+        // Create OpenGL ES view:
+        int depthSize = 16;
+        int stencilSize = 0;
+        boolean translucent = Vuforia.requiresAlpha();
+
+        mGlView = new SampleApplicationGLView(this);
+        mGlView.init(translucent, depthSize, stencilSize);
+
+        mRenderer = new VirtualHandsRenderer(this, vuforiaAppSession);
+
+        // TODO(chongshao): textures may be needed
+  //      mRenderer.setTextures(mTextures);
+        mGlView.setRenderer(mRenderer);
+
+    }
+
+
+    // Shows initialization error messages as System dialogs
+    public void showInitializationErrorMessage(String message)
+    {
+        final String errorMessage = message;
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                if (mErrorDialog != null)
+                {
+                    mErrorDialog.dismiss();
+                }
+
+                // Generates an Alert Dialog to show the error message
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        VirtualHandsActivity.this);
+                builder
+                        .setMessage(errorMessage)
+                        .setTitle(getString(R.string.INIT_ERROR))
+                        .setCancelable(false)
+                        .setIcon(0)
+                        .setPositiveButton(getString(R.string.button_OK),
+                                new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        finish();
+                                    }
+                                });
+
+                mErrorDialog = builder.create();
+                mErrorDialog.show();
+            }
+        });
+    }
+
 }
+
+
 
