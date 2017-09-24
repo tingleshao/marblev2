@@ -28,6 +28,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by chongshao on 9/24/17.
  */
 
+
 public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
     private static final String LOGTAG = "VirtualButtonRenderer";
@@ -37,8 +38,9 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private boolean mIsActive = false;
 
-    private VirtualButtons mActivity;
+    private VirtualHandsActivity mActivity;
 
+    // TODO(chongshao): maybe we need textures?
     private Vector<Texture> mTextures;
 
     //  private Teapot mTeapot = new Teapot();
@@ -71,7 +73,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     static private float YELLOW_VB_BUTTON[] =  {0.01482f, -0.05352f, 0.04775f, -0.06587f};
     static private float GREEN_VB_BUTTON[] =  {0.07657f, -0.05352f, 0.10950f, -0.06587f};
 
-    public VirtualButtonRenderer(VirtualHandsActivity activity,
+    public VirtualHandsRenderer(VirtualHandsActivity activity,
                                  SampleApplicationSession session)
     {
         mActivity = activity;
@@ -229,7 +231,8 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
                 int buttonIndex = 0;
                 // Run through button name array to find button index
-                for (int j = 0; j < VirtualButtons.NUM_BUTTONS; ++j)
+                // TODO(chongshao): fix this
+                for (int j = 0; j < VirtualHandsActivity.NUM_BUTTONS; ++j)
                 {
                     if (button.getName().compareTo(
                             mActivity.virtualButtonColors[j]) == 0)
@@ -395,10 +398,10 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     }
 
 
-    public void setTextures(Vector<Texture> textures)
-    {
-        mTextures = textures;
+//    public void setTextures(Vector<Texture> textures)
+ //   {
+  //      mTextures = textures;
 
-    }
+  //  }
 
 }
