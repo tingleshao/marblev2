@@ -3,8 +3,16 @@ package org.v2.marble.marblev2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -12,11 +20,13 @@ import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
 import com.vuforia.ImageTarget;
 import com.vuforia.ObjectTracker;
+import com.vuforia.Rectangle;
 import com.vuforia.STORAGE_TYPE;
 import com.vuforia.State;
 import com.vuforia.Trackable;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
+import com.vuforia.VirtualButton;
 import com.vuforia.Vuforia;
 
 import java.util.Vector;
@@ -58,6 +68,324 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     private AlertDialog mErrorDialog;
 
+    private GestureDetector mGestureDetector;
+
+    private boolean updateBtns = false;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        Log.d(LOGTAG, "onCreate");
+        super.onCreate(savedInstanceState);
+
+        vuforiaAppSession = new SampleApplicationSession(this);
+
+        startLoadingAnimation();
+
+        vuforiaAppSession
+                .initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // Load any sample specific textures:
+        mTextures = new Vector<Texture>();
+        loadTextures();
+
+        mGestureDetector = new GestureDetector(this, new GestureListener());
+
+     //   mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
+     //           "droid");
+    }
+    // Process Single Tap event to trigger autofocus
+    private class GestureListener extends
+            GestureDetector.SimpleOnGestureListener
+    {
+        // Used to set autofocus one second after a manual focus is triggered
+        private final Handler autofocusHandler = new Handler();
+
+
+        @Override
+        public boolean onDown(MotionEvent e)
+        {
+            return true;
+        }
+
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e)
+        {
+            // Generates a Handler to trigger autofocus
+            // after 1 second
+            autofocusHandler.postDelayed(new Runnable()
+            {
+                public void run()
+                {
+                    boolean result = CameraDevice.getInstance().setFocusMode(
+                            CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
+
+                    if (!result)
+                        Log.e("SingleTapUp", "Unable to trigger focus");
+                }
+            }, 1000L);
+
+            return true;
+        }
+    }
+
+    // We want to load specific textures from the APK, which we will later use
+    // for rendering.
+    private void loadTextures()
+    {
+        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
+                getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
+                getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
+                getAssets()));
+        mTextures.add(Texture.loadTextureFromApk(
+                "VirtualButtons/TextureTeapotYellow.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk(
+                "VirtualButtons/TextureTeapotGreen.png", getAssets()));
+    }
+
+    // Called when the activity will start interacting with the user.
+    @Override
+    protected void onResume()
+    {
+        Log.d(LOGTAG, "onResume");
+        super.onResume();
+
+        // This is needed for some Droid devices to force portrait
+     //   if (mIsDroidDevice)
+    //    {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      //  }
+
+        try
+        {
+            vuforiaAppSession.resumeAR();
+        } catch (SampleApplicationException e)
+        {
+            Log.e(LOGTAG, e.getString());
+        }
+
+        // Resume the GL view:
+        if (mGlView != null)
+        {
+            mGlView.setVisibility(View.VISIBLE);
+            mGlView.onResume();
+        }
+
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration config)
+    {
+        Log.d(LOGTAG, "onConfigurationChanged");
+        super.onConfigurationChanged(config);
+
+        vuforiaAppSession.onConfigurationChanged();
+    }
+
+
+    // Called when the system is about to start resuming a previous activity.
+    @Override
+    protected void onPause()
+    {
+        Log.d(LOGTAG, "onPause");
+        super.onPause();
+
+        if (mGlView != null)
+        {
+            mGlView.setVisibility(View.INVISIBLE);
+            mGlView.onPause();
+        }
+
+        try
+        {
+            vuforiaAppSession.pauseAR();
+        } catch (SampleApplicationException e)
+        {
+            Log.e(LOGTAG, e.getString());
+        }
+    }
+
+
+    // The final call you receive before your activity is destroyed.
+    @Override
+    protected void onDestroy()
+    {
+        Log.d(LOGTAG, "onDestroy");
+        super.onDestroy();
+
+        try
+        {
+            vuforiaAppSession.stopAR();
+        } catch (SampleApplicationException e)
+        {
+            Log.e(LOGTAG, e.getString());
+        }
+
+        // Unload texture:
+        mTextures.clear();
+        mTextures = null;
+
+        System.gc();
+    }
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        // Process the Gestures
+      //  if (mSampleAppMenu != null && mSampleAppMenu.processEvent(event))
+     //       return true;
+
+        return mGestureDetector.onTouchEvent(event);
+    }
+
+
+    private void startLoadingAnimation()
+    {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        mUILayout = (RelativeLayout) inflater.inflate(R.layout.camera_overlay,
+                null, false);
+
+        mUILayout.setVisibility(View.VISIBLE);
+        mUILayout.setBackgroundColor(Color.BLACK);
+
+        // Gets a reference to the loading dialog
+        loadingDialogHandler.mLoadingDialogContainer = mUILayout
+                .findViewById(R.id.loading_indicator);
+
+        // Shows the loading indicator at start
+        loadingDialogHandler
+                .sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
+
+        // Adds the inflated layout to the view
+        addContentView(mUILayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+
+    // Create/destroy a Virtual Button at runtime
+    //
+    // Note: This will NOT work if the tracker is active!
+    boolean toggleVirtualButton(ImageTarget imageTarget, String name,
+                                float left, float top, float right, float bottom)
+    {
+        Log.d(LOGTAG, "toggleVirtualButton");
+
+        boolean buttonToggleSuccess = false;
+
+        VirtualButton virtualButton = imageTarget.getVirtualButton(name);
+        if (virtualButton != null)
+        {
+            Log.d(LOGTAG, "Destroying Virtual Button> " + name);
+            buttonToggleSuccess = imageTarget
+                    .destroyVirtualButton(virtualButton);
+        } else
+        {
+            Log.d(LOGTAG, "Creating Virtual Button> " + name);
+            Rectangle vbRectangle = new Rectangle(left, top, right, bottom);
+            VirtualButton virtualButton2 = imageTarget.createVirtualButton(
+                    name, vbRectangle);
+
+            if (virtualButton2 != null)
+            {
+                // This is just a showcase. The values used here a set by
+                // default on Virtual Button creation
+                virtualButton2.setEnabled(true);
+                virtualButton2.setSensitivity(VirtualButton.SENSITIVITY.MEDIUM);
+                buttonToggleSuccess = true;
+            }
+        }
+
+        return buttonToggleSuccess;
+    }
+    private void addButtonToToggle(int virtualButtonIdx)
+    {
+        Log.d(LOGTAG, "addButtonToToggle");
+
+        assert (virtualButtonIdx >= 0 && virtualButtonIdx < NUM_BUTTONS);
+
+        switch (virtualButtonIdx)
+        {
+            case 0:
+                buttonMask |= BUTTON_1;
+                break;
+
+            case 1:
+                buttonMask |= BUTTON_2;
+                break;
+
+            case 2:
+                buttonMask |= BUTTON_3;
+                break;
+
+            case 3:
+                buttonMask |= BUTTON_4;
+                break;
+        }
+        updateBtns = true;
+    }
+
+//    // This method sets the menu's settings
+//    private void setSampleAppMenuSettings()
+//    {
+//        SampleAppMenuGroup group;
+//
+//        group = mSampleAppMenu.addGroup("", false);
+//        group.addTextItem(getString(R.string.menu_back), -1);
+//
+//        group = mSampleAppMenu.addGroup("", true);
+//        group.addSelectionItem(getString(R.string.menu_button_red),
+//                CMD_BUTTON_RED, true);
+//        group.addSelectionItem(getString(R.string.menu_button_blue),
+//                CMD_BUTTON_BLUE, true);
+//        group.addSelectionItem(getString(R.string.menu_button_yellow),
+//                CMD_BUTTON_YELLOW, true);
+//        group.addSelectionItem(getString(R.string.menu_button_green),
+//                CMD_BUTTON_GREEN, true);
+//
+//        mSampleAppMenu.attachMenu();
+//    }
+
+//
+//    @Override
+//    public boolean menuProcess(int command)
+//    {
+//        boolean result = true;
+//
+//        switch (command)
+//        {
+//            case CMD_BACK:
+//                finish();
+//                break;
+//
+//            case CMD_BUTTON_RED:
+//                addButtonToToggle(0);
+//                break;
+//
+//            case CMD_BUTTON_BLUE:
+//                addButtonToToggle(1);
+//                break;
+//
+//            case CMD_BUTTON_YELLOW:
+//                addButtonToToggle(2);
+//                break;
+//
+//            case CMD_BUTTON_GREEN:
+//                addButtonToToggle(3);
+//                break;
+//
+//        }
+//
+//        return result;
+//    }
 
 
     @Override
