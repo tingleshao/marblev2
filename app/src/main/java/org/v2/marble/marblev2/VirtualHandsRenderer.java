@@ -27,8 +27,6 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by chongshao on 9/24/17.
  */
-
-
 public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
     private static final String LOGTAG = "VirtualButtonRenderer";
@@ -40,11 +38,8 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private VirtualHandsActivity mActivity;
 
-    // TODO(chongshao): maybe we need textures?
     private Vector<Texture> mTextures;
 
-    //  private Teapot mTeapot = new Teapot();
-    //  private CubeObject mTeapot = new CubeObject();
     private Hand mTeapot = new Hand();
 
     // OpenGL ES 2.0 specific (3D model):
@@ -231,7 +226,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
                 int buttonIndex = 0;
                 // Run through button name array to find button index
-                // TODO(chongshao): fix this
                 for (int j = 0; j < VirtualHandsActivity.NUM_BUTTONS; ++j)
                 {
                     if (button.getName().compareTo(

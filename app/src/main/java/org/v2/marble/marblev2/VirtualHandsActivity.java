@@ -23,7 +23,6 @@ import com.vuforia.ObjectTracker;
 import com.vuforia.Rectangle;
 import com.vuforia.STORAGE_TYPE;
 import com.vuforia.State;
-import com.vuforia.Trackable;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.VirtualButton;
@@ -34,9 +33,9 @@ import java.util.Vector;
 /**
  * Created by chongshao on 9/21/17.
  */
-// TODO(chognshao): make it marker free
-// TODO(chongshao): implement SampleAppMenuInterface
-    //TODO(chongshao): init
+// TODO(chongshao): make it marker free
+// TODO(chongshao): enable ndk
+// TODO(chongshao): add these image resources
 public class VirtualHandsActivity extends Activity implements SampleApplicationControl {
 
     // Enumeration for masking button indices into single integer:
@@ -59,8 +58,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     private RelativeLayout mUILayout;
 
-    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(
-            this);
+    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
 
     SampleApplicationSession vuforiaAppSession;
 
@@ -71,8 +69,6 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     private GestureDetector mGestureDetector;
 
     private boolean updateBtns = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,18 +94,15 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     }
     // Process Single Tap event to trigger autofocus
     private class GestureListener extends
-            GestureDetector.SimpleOnGestureListener
-    {
+            GestureDetector.SimpleOnGestureListener {
         // Used to set autofocus one second after a manual focus is triggered
         private final Handler autofocusHandler = new Handler();
-
 
         @Override
         public boolean onDown(MotionEvent e)
         {
             return true;
         }
-
 
         @Override
         public boolean onSingleTapUp(MotionEvent e)
@@ -134,8 +127,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
-    private void loadTextures()
-    {
+    private void loadTextures() {
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
                 getAssets()));
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
@@ -143,9 +135,9 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
                 getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "VirtualButtons/TextureTeapotYellow.png", getAssets()));
+                "TextureTeapotYellow.png", getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "VirtualButtons/TextureTeapotGreen.png", getAssets()));
+                "TextureTeapotGreen.png", getAssets()));
     }
 
     // Called when the activity will start interacting with the user.
@@ -162,38 +154,29 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       //  }
 
-        try
-        {
+        try {
             vuforiaAppSession.resumeAR();
-        } catch (SampleApplicationException e)
-        {
+        } catch (SampleApplicationException e) {
             Log.e(LOGTAG, e.getString());
         }
 
         // Resume the GL view:
-        if (mGlView != null)
-        {
+        if (mGlView != null) {
             mGlView.setVisibility(View.VISIBLE);
             mGlView.onResume();
         }
-
     }
 
-
     @Override
-    public void onConfigurationChanged(Configuration config)
-    {
+    public void onConfigurationChanged(Configuration config) {
         Log.d(LOGTAG, "onConfigurationChanged");
         super.onConfigurationChanged(config);
-
         vuforiaAppSession.onConfigurationChanged();
     }
 
-
     // Called when the system is about to start resuming a previous activity.
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         Log.d(LOGTAG, "onPause");
         super.onPause();
 
@@ -212,11 +195,9 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         }
     }
 
-
     // The final call you receive before your activity is destroyed.
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         Log.d(LOGTAG, "onDestroy");
         super.onDestroy();
 
@@ -235,11 +216,8 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         System.gc();
     }
 
-
-
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         // Process the Gestures
       //  if (mSampleAppMenu != null && mSampleAppMenu.processEvent(event))
      //       return true;
@@ -248,8 +226,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     }
 
 
-    private void startLoadingAnimation()
-    {
+    private void startLoadingAnimation() {
         LayoutInflater inflater = LayoutInflater.from(this);
         mUILayout = (RelativeLayout) inflater.inflate(R.layout.camera_overlay,
                 null, false);
@@ -467,10 +444,8 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         {
             Log.i(LOGTAG, "Tracker successfully initialized");
         }
-
         return result;
     }
-
 
 
     @Override
@@ -550,7 +525,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         }
 
         // Load the data set:
-        if (!dataSet.load("VirtualButtons/Wood.xml",
+        if (!dataSet.load("Wood.xml",
                 STORAGE_TYPE.STORAGE_APPRESOURCE))
         {
             Log.d(LOGTAG, "Failed to load data set.");
@@ -611,12 +586,10 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
         mRenderer = new VirtualHandsRenderer(this, vuforiaAppSession);
 
-        // TODO(chongshao): textures may be needed
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
 
     }
-
 
     // Shows initialization error messages as System dialogs
     public void showInitializationErrorMessage(String message)
@@ -649,7 +622,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
                                 });
 
                 mErrorDialog = builder.create();
-                mErrorDialog.show();
+        //        mErrorDialog.show();
             }
         });
     }
