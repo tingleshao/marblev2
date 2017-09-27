@@ -19,6 +19,7 @@ import com.vuforia.Vuforia;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -27,6 +28,8 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by chongshao on 9/24/17.
  */
+// TODO(chongshao): add noises
+// TODO(chongshao): add rotation adaption, look at old project
 public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
     private static final String LOGTAG = "VirtualButtonRenderer";
@@ -40,19 +43,18 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private Vector<Texture> mTextures;
 
-    private Hand mTeapot = new Hand();
+    private MeshObject mTeapot = new Hand();
 
     // TODO(chongshao): make it in one class
-    private Hand1 hand1 = new Hand1();
-    private Hand2 hand2 = new Hand2();
-    private Hand3 hand3 = new Hand3();
-    private Hand4 hand4 = new Hand4();
-    private Hand5 hand5 = new Hand5();
-    private Hand6 hand6 = new Hand6();
-    private Hand7 hand7 = new Hand7();
-    private Hand8 hand8 = new Hand8();
-    private Hand9 hand9 = new Hand9();
-
+    private MeshObject hand1 = new Hand1();
+    private MeshObject hand2 = new Hand2();
+    private MeshObject hand3 = new Hand3();
+    private MeshObject hand4 = new Hand4();
+    private MeshObject hand5 = new Hand5();
+    private MeshObject hand6 = new Hand6();
+    private MeshObject hand7 = new Hand7();
+    private MeshObject hand8 = new Hand8();
+    private MeshObject hand9 = new Hand9();
 
     // OpenGL ES 2.0 specific (3D model):
     private int shaderProgramID = 0;
@@ -68,6 +70,9 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     // OpenGL ES 2.0 specific (Virtual Buttons):
     private int vbShaderProgramID = 0;
     private int vbVertexHandle = 0;
+
+    // Goes through 0~8
+    private int currObjIdx = 0;
 
     // Constants:
     static private float kTeapotScale = 0.003f;
@@ -210,10 +215,58 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         // Did we find any trackables this frame?
         if (state.getNumTrackableResults() > 0)
         {
+            if (currObjIdx < 10) {
+                mTeapot = hand1;
+                currObjIdx++;
+            } else if (currObjIdx < 20) {
+                mTeapot = hand2;
+                currObjIdx++;
+            } else if (currObjIdx < 30) {
+                mTeapot = hand3;
+                currObjIdx++;
+            } else if (currObjIdx < 40) {
+                mTeapot = hand4;
+                currObjIdx++;
+            } else if (currObjIdx < 50) {
+                mTeapot = hand5;
+                currObjIdx++;
+            } else if (currObjIdx < 60) {
+                mTeapot = hand6;
+                currObjIdx++;
+            } else if (currObjIdx < 70) {
+                mTeapot = hand7;
+                currObjIdx++;
+            } else if (currObjIdx < 80) {
+                mTeapot = hand8;
+                currObjIdx++;
+            } else if (currObjIdx < 90) {
+                mTeapot = hand9;
+                currObjIdx++;
+            }
+            else {
+                currObjIdx = 0;
+            }
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
-            float[] modelViewMatrix = Tool.convertPose2GLMatrix(
-                    trackableResult.getPose()).getData();
+         //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
+        //            trackableResult.getPose()).getData();
+            float[] modelViewMatrix = {0.87753934f, 0.32194763f, -0.35535115f, 0.0f, 0.40119046f, -0.89885277f, 0.17638008f, 0.0f, -0.26262322f, -0.29734397f, -0.917941f, 0.0f, 0.0010600443f, 0.0148388855f, 0.19901177f, 1.0f} ;
+            Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
+                         String.valueOf(modelViewMatrix[1]) + " " +
+                    String.valueOf(modelViewMatrix[2]) + " " +
+                    String.valueOf(modelViewMatrix[3]) + " " +
+                    String.valueOf(modelViewMatrix[4]) + " " +
+                    String.valueOf(modelViewMatrix[5]) + " " +
+                    String.valueOf(modelViewMatrix[6]) + " " +
+                    String.valueOf(modelViewMatrix[7]) + " " +
+                    String.valueOf(modelViewMatrix[8]) + " " +
+                    String.valueOf(modelViewMatrix[9]) + " " +
+                    String.valueOf(modelViewMatrix[10]) + " " +
+                    String.valueOf(modelViewMatrix[11]) + " " +
+                    String.valueOf(modelViewMatrix[12]) + " " +
+                    String.valueOf(modelViewMatrix[13]) + " " +
+                    String.valueOf(modelViewMatrix[14]) + " " +
+                    String.valueOf(modelViewMatrix[15]));
 
             // The image target specific result:
             ImageTargetResult imageTargetResult = (ImageTargetResult) trackableResult;
@@ -248,7 +301,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
                     }
                 }
 
-                // If the button is pressed, than use this texture:
+                // If the button is pressed, then use this texture:
                 if (buttonResult.isPressed())
                 {
                     textureIndex = buttonIndex + 1;
