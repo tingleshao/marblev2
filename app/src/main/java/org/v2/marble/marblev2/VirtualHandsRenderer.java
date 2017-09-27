@@ -42,6 +42,18 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private Hand mTeapot = new Hand();
 
+    // TODO(chongshao): make it in one class
+    private Hand1 hand1 = new Hand1();
+    private Hand2 hand2 = new Hand2();
+    private Hand3 hand3 = new Hand3();
+    private Hand4 hand4 = new Hand4();
+    private Hand5 hand5 = new Hand5();
+    private Hand6 hand6 = new Hand6();
+    private Hand7 hand7 = new Hand7();
+    private Hand8 hand8 = new Hand8();
+    private Hand9 hand9 = new Hand9();
+
+
     // OpenGL ES 2.0 specific (3D model):
     private int shaderProgramID = 0;
     private int vertexHandle = 0;
