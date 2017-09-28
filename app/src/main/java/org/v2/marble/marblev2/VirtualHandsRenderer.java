@@ -47,7 +47,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     private MeshObject mTeapot = new Hand();
 
     // TODO(chongshao): make it in one class
-    private MeshObject hand1 = new Hand1();
+    private MeshObject hand1 = new Inter10();
     private MeshObject hand2 = new Hand2();
     private MeshObject hand3 = new Hand3();
     private MeshObject hand4 = new Hand4();
