@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,6 +31,9 @@ import com.vuforia.TrackerManager;
 import com.vuforia.VirtualButton;
 import com.vuforia.Vuforia;
 
+import android.hardware.SensorManager;
+
+
 import java.util.Vector;
 
 /**
@@ -36,7 +42,7 @@ import java.util.Vector;
 // TODO(chongshao): make it marker free
 // TODO(chongshao): enable ndk
 // TODO(chongshao): add these image resources
-public class VirtualHandsActivity extends Activity implements SampleApplicationControl {
+public class VirtualHandsActivity extends Activity implements SampleApplicationControl, SensorEventListener {
 
     // Enumeration for masking button indices into single integer:
     private static final int BUTTON_1 = 1;
@@ -70,6 +76,14 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     private boolean updateBtns = false;
 
+    //IMU
+    private SensorManager mSensorManager;
+    private Sensor mRotationVectorSensor, mAccelerationSensor, mGravitySensor, mMagSensor;
+    // new
+    private float[] gravityValues = null;
+    private float[] magneticValues = null;
+    float[] prevR = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -91,7 +105,57 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
      //   mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
      //           "droid");
+
+        // IMU
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mRotationVectorSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_ROTATION_VECTOR);
+        mAccelerationSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_LINEAR_ACCELERATION);
+
+        mGravitySensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_GRAVITY);
+        mMagSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_MAGNETIC_FIELD);
+        mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
+        mSensorManager.registerListener(this, mAccelerationSensor, 5000);
+
+        mSensorManager.registerListener(this, mGravitySensor, 10000);
+        mSensorManager.registerListener(this, mMagSensor, 10000);
+
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        // rotation
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR && (gravityValues != null) && (magneticValues != null)) {
+            long startTime = System.currentTimeMillis();
+
+            float[] R = new float[16], I = new float[16];
+            float[] angleChange = null;
+            SensorManager.getRotationMatrixFromVector(R, event.values);
+            if (prevR == null) {
+                prevR = R;
+            } else {
+                angleChange = new float[3];
+                SensorManager.getAngleChange(angleChange, R, prevR);
+            }
+            if (angleChange != null) {
+                VirtualHandsActivity.this.mRenderer.rotate3(angleChange[0]  / (-100.0f * (float) Math.PI));
+                VirtualHandsActivity.this.mRenderer.rotate2(angleChange[1] / (-100.0f * (float) Math.PI));
+                VirtualHandsActivity.this.mRenderer.rotate1(angleChange[2]  / (-100.0f * (float) Math.PI));
+            }
+            prevR = R;
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
     // Process Single Tap event to trigger autofocus
     private class GestureListener extends
             GestureDetector.SimpleOnGestureListener {
@@ -128,16 +192,16 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
     private void loadTextures() {
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",
+        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png",
+        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",
+        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
                 getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "TextureTeapotYellow.png", getAssets()));
+                "hand.jpg", getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "TextureTeapotGreen.png", getAssets()));
+                "hand.jpg", getAssets()));
     }
 
     // Called when the activity will start interacting with the user.

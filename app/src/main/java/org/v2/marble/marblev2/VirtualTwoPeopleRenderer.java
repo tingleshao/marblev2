@@ -7,31 +7,24 @@ import android.util.Log;
 
 import com.vuforia.Device;
 import com.vuforia.ImageTargetResult;
-import com.vuforia.Rectangle;
 import com.vuforia.Renderer;
 import com.vuforia.State;
-import com.vuforia.Tool;
 import com.vuforia.TrackableResult;
-import com.vuforia.VirtualButton;
-import com.vuforia.VirtualButtonResult;
 import com.vuforia.Vuforia;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-
 /**
- * Created by chongshao on 9/24/17.
+ * Created by chongshao on 9/27/17.
  */
-// TODO(chongshao): add noises
-// TODO(chongshao): add rotation adaption, look at old project
-public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
+
+public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
     private static final String LOGTAG = "VirtualButtonRenderer";
 
@@ -86,18 +79,18 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     static private float YELLOW_VB_BUTTON[] =  {0.01482f, -0.05352f, 0.04775f, -0.06587f};
     static private float GREEN_VB_BUTTON[] =  {0.07657f, -0.05352f, 0.10950f, -0.06587f};
 
-  //  float[] modelViewMatrix = {0.87753934f, 0.32194763f, -0.35535115f, 0.0f, 0.40119046f, -0.89885277f, 0.17638008f, 0.0f, -0.26262322f, -0.29734397f, -0.917941f, 0.0f, 0.0010600443f, 0.0148388855f, 0.19901177f, 1.0f} ;
-  float[] modelViewMatrix = { 0.6972165f, 0.53568584f, -0.47637162f, 0.0f,
-          0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
-          -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
-          -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
+    //  float[] modelViewMatrix = {0.87753934f, 0.32194763f, -0.35535115f, 0.0f, 0.40119046f, -0.89885277f, 0.17638008f, 0.0f, -0.26262322f, -0.29734397f, -0.917941f, 0.0f, 0.0010600443f, 0.0148388855f, 0.19901177f, 1.0f} ;
+    float[] modelViewMatrix = { 0.6972165f, 0.53568584f, -0.47637162f, 0.0f,
+            0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
+            -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
+            -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
     float[] invM = new float[]{1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        -15.0f, -50.0f, -500.0f, 1.0f};
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            -15.0f, -50.0f, -500.0f, 1.0f};
 
-    public VirtualHandsRenderer(VirtualHandsActivity activity,
-                                 SampleApplicationSession session)
+    public VirtualTwoPeopleRenderer(VirtualHandsActivity activity,
+                                SampleApplicationSession session)
     {
         mActivity = activity;
         vuforiaAppSession = session;
@@ -122,7 +115,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         mSampleAppRenderer.onSurfaceCreated();
     }
 
-
     // Called when the surface changed size.
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -138,7 +130,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         // Call function to initialize rendering:
         initRendering();
     }
-
 
     public void setActive(boolean active)
     {
@@ -210,7 +201,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
                 "color");
     }
 
-
     public void rotate1(float delta_angle) {
         //   this.angle1 += delta_angle;
         Matrix.rotateM(invM, 0, invM, 0, delta_angle, 1, 0, 0);
@@ -257,7 +247,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         // Did we find any trackables this frame?
         state.getNumTrackableResults();
         if (true)
-     //   if (true)
+        //   if (true)
         {
             if (currObjIdx < 10) {
                 mTeapot = hand1;
@@ -310,10 +300,10 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
             }
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
-         //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
-         //           trackableResult.getPose()).getData();
+            //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
+            //           trackableResult.getPose()).getData();
             Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
-                         String.valueOf(modelViewMatrix[1]) + " " +
+                    String.valueOf(modelViewMatrix[1]) + " " +
                     String.valueOf(modelViewMatrix[2]) + " " +
                     String.valueOf(modelViewMatrix[3]) + " " +
                     String.valueOf(modelViewMatrix[4]) + " " +
@@ -338,123 +328,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
             // Set the texture used for the teapot model:
             int textureIndex = 0;
-//
-  //          float vbVertices[] = new float[imageTargetResult
-        //            .getNumVirtualButtons() * 24];
-    //        short vbCounter = 0;
-
-            // Iterate through this targets virtual buttons:
-//            for (int i = 0; i < imageTargetResult.getNumVirtualButtons(); ++i)
-//            {
-//                VirtualButtonResult buttonResult = imageTargetResult
-//                        .getVirtualButtonResult(i);
-//                VirtualButton button = buttonResult.getVirtualButton();
-//
-//                int buttonIndex = 0;
-//                // Run through button name array to find button index
-//                for (int j = 0; j < VirtualHandsActivity.NUM_BUTTONS; ++j)
-//                {
-//                    if (button.getName().compareTo(
-//                            mActivity.virtualButtonColors[j]) == 0)
-//                    {
-//                        buttonIndex = j;
-//                        break;
-//                    }
-//                }
-//
-//                // If the button is pressed, then use this texture:
-//                if (buttonResult.isPressed())
-//                {
-//                    textureIndex = buttonIndex + 1;
-//                }
-//
-//                // Define the four virtual buttons as Rectangle using the same values as the dataset
-//                Rectangle vbRectangle[] = new Rectangle[4];
-//                vbRectangle[0] = new Rectangle(RED_VB_BUTTON[0], RED_VB_BUTTON[1],
-//                        RED_VB_BUTTON[2], RED_VB_BUTTON[3]);
-//                vbRectangle[1] = new Rectangle(BLUE_VB_BUTTON[0], BLUE_VB_BUTTON[1],
-//                        BLUE_VB_BUTTON[2], BLUE_VB_BUTTON[3]);
-//                vbRectangle[2] = new Rectangle(YELLOW_VB_BUTTON[0], YELLOW_VB_BUTTON[1],
-//                        YELLOW_VB_BUTTON[2], YELLOW_VB_BUTTON[3]);
-//                vbRectangle[3] = new Rectangle(GREEN_VB_BUTTON[0], GREEN_VB_BUTTON[1],
-//                        GREEN_VB_BUTTON[2], GREEN_VB_BUTTON[3]);
-
-                // We add the vertices to a common array in order to have one
-                // single
-                // draw call. This is more efficient than having multiple
-                // glDrawArray calls
-//                vbVertices[vbCounter] = vbRectangle[buttonIndex].getLeftTopX();
-//                vbVertices[vbCounter + 1] = vbRectangle[buttonIndex]
-//                        .getLeftTopY();
-//                vbVertices[vbCounter + 2] = 0.0f;
-//                vbVertices[vbCounter + 3] = vbRectangle[buttonIndex]
-//                        .getRightBottomX();
-//                vbVertices[vbCounter + 4] = vbRectangle[buttonIndex]
-//                        .getLeftTopY();
-//                vbVertices[vbCounter + 5] = 0.0f;
-//                vbVertices[vbCounter + 6] = vbRectangle[buttonIndex]
-//                        .getRightBottomX();
-//                vbVertices[vbCounter + 7] = vbRectangle[buttonIndex]
-//                        .getLeftTopY();
-//                vbVertices[vbCounter + 8] = 0.0f;
-//                vbVertices[vbCounter + 9] = vbRectangle[buttonIndex]
-//                        .getRightBottomX();
-//                vbVertices[vbCounter + 10] = vbRectangle[buttonIndex]
-//                        .getRightBottomY();
-//                vbVertices[vbCounter + 11] = 0.0f;
-//                vbVertices[vbCounter + 12] = vbRectangle[buttonIndex]
-//                        .getRightBottomX();
-//                vbVertices[vbCounter + 13] = vbRectangle[buttonIndex]
-//                        .getRightBottomY();
-//                vbVertices[vbCounter + 14] = 0.0f;
-//                vbVertices[vbCounter + 15] = vbRectangle[buttonIndex]
-//                        .getLeftTopX();
-//                vbVertices[vbCounter + 16] = vbRectangle[buttonIndex]
-//                        .getRightBottomY();
-//                vbVertices[vbCounter + 17] = 0.0f;
-//                vbVertices[vbCounter + 18] = vbRectangle[buttonIndex]
-//                        .getLeftTopX();
-//                vbVertices[vbCounter + 19] = vbRectangle[buttonIndex]
-//                        .getRightBottomY();
-//                vbVertices[vbCounter + 20] = 0.0f;
-//                vbVertices[vbCounter + 21] = vbRectangle[buttonIndex]
-//                        .getLeftTopX();
-//                vbVertices[vbCounter + 22] = vbRectangle[buttonIndex]
-//                        .getLeftTopY();
-//                vbVertices[vbCounter + 23] = 0.0f;
-//                vbCounter += 24;
-
-       //     }
-
-            // We only render if there is something on the array
-//            if (vbCounter > 0)
-//            {
-//                // Render frame around button
-//                GLES20.glUseProgram(vbShaderProgramID);
-//
-//                GLES20.glVertexAttribPointer(vbVertexHandle, 3,
-//                        GLES20.GL_FLOAT, false, 0, fillBuffer(vbVertices));
-//
-//                GLES20.glEnableVertexAttribArray(vbVertexHandle);
-//
-//                GLES20.glUniform1f(lineOpacityHandle, 1.0f);
-//                GLES20.glUniform3f(lineColorHandle, 1.0f, 1.0f, 1.0f);
-//
-//                GLES20.glUniformMatrix4fv(mvpMatrixButtonsHandle, 1, false,
-//                        modelViewProjection, 0);
-//
-//                // We multiply by 8 because that's the number of vertices per
-//                // button
-//                // The reason is that GL_LINES considers only pairs. So some
-//                // vertices
-//                // must be repeated.
-//                GLES20.glDrawArrays(GLES20.GL_LINES, 0,
-//                        imageTargetResult.getNumVirtualButtons() * 8);
-//
-//                SampleUtils.checkGLError("VirtualButtons drawButton");
-//
-//                GLES20.glDisableVertexAttribArray(vbVertexHandle);
-//            }
 
             // Assumptions:
             Texture thisTexture = mTextures.get(textureIndex);
