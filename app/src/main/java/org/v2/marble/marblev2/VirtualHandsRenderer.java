@@ -7,19 +7,14 @@ import android.util.Log;
 
 import com.vuforia.Device;
 import com.vuforia.ImageTargetResult;
-import com.vuforia.Rectangle;
 import com.vuforia.Renderer;
 import com.vuforia.State;
-import com.vuforia.Tool;
 import com.vuforia.TrackableResult;
-import com.vuforia.VirtualButton;
-import com.vuforia.VirtualButtonResult;
 import com.vuforia.Vuforia;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -477,9 +472,10 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
             GLES20.glEnableVertexAttribArray(vertexHandle);
             //        GLES20.glEnableVertexAttribArray(textureCoordHandle);
 
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                    thisTexture.mTextureID[0]);
+            // TODO(Chongshao): I disabled this
+       //     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+       //     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
+       //             thisTexture.mTextureID[0]);
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                     modelViewProjectionScaled, 0);
             GLES20.glUniform1i(texSampler2DHandle, 0);
@@ -488,7 +484,8 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
                     mTeapot.getIndices());
 
             GLES20.glDisableVertexAttribArray(vertexHandle);
-            GLES20.glDisableVertexAttribArray(textureCoordHandle);
+            // TODO(Chongshao): I disabled this
+            //       GLES20.glDisableVertexAttribArray(textureCoordHandle);
 
             SampleUtils.checkGLError("VirtualButtons renderFrame");
         }
