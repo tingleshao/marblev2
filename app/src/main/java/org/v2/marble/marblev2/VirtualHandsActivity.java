@@ -58,7 +58,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     private DataSet dataSet = null;
 
-    private VirtualHandsRenderer mRenderer;
+    private VirtualTwoPeopleRenderer mRenderer;
 
     private SampleApplicationGLView mGlView;
 
@@ -75,6 +75,8 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     private GestureDetector mGestureDetector;
 
     private boolean updateBtns = false;
+
+    String texturename = "fabric.jpg";
 
     //IMU
     private SensorManager mSensorManager;
@@ -192,16 +194,16 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
     private void loadTextures() {
-        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
+        mTextures.add(Texture.loadTextureFromApk(texturename,
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
+        mTextures.add(Texture.loadTextureFromApk(texturename,
                 getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("hand.jpg",
+        mTextures.add(Texture.loadTextureFromApk(texturename,
                 getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "hand.jpg", getAssets()));
+                texturename, getAssets()));
         mTextures.add(Texture.loadTextureFromApk(
-                "hand.jpg", getAssets()));
+                texturename, getAssets()));
     }
 
     // Called when the activity will start interacting with the user.
@@ -648,7 +650,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         mGlView = new SampleApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
 
-        mRenderer = new VirtualHandsRenderer(this, vuforiaAppSession);
+        mRenderer = new VirtualTwoPeopleRenderer(this, vuforiaAppSession);
 
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);

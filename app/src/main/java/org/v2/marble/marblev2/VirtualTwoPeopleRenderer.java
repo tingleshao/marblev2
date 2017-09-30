@@ -9,6 +9,7 @@ import com.vuforia.Device;
 import com.vuforia.ImageTargetResult;
 import com.vuforia.Renderer;
 import com.vuforia.State;
+import com.vuforia.Tool;
 import com.vuforia.TrackableResult;
 import com.vuforia.Vuforia;
 
@@ -24,6 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by chongshao on 9/27/17.
  */
 
+// TODO(chongshao): make different freq: 3 6 9 12 15
 public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
     private static final String LOGTAG = "VirtualButtonRenderer";
@@ -40,15 +42,15 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
     private MeshObject mTeapot = new Hand();
 
     // TODO(chongshao): make it in one class
-    private MeshObject hand1 = new Hand1();
-    private MeshObject hand2 = new Hand2();
-    private MeshObject hand3 = new Hand3();
-    private MeshObject hand4 = new Hand4();
-    private MeshObject hand5 = new Hand5();
-    private MeshObject hand6 = new Hand6();
-    private MeshObject hand7 = new Hand7();
-    private MeshObject hand8 = new Hand8();
-    private MeshObject hand9 = new Hand9();
+    private MeshObject hand1 = new Inter1();
+    private MeshObject hand2 = new Inter2();
+    private MeshObject hand3 = new Inter3();
+    private MeshObject hand4 = new Inter4();
+    private MeshObject hand5 = new Inter5();
+    private MeshObject hand6 = new Inter6();
+    private MeshObject hand7 = new Inter7();
+    private MeshObject hand8 = new Inter8();
+    private MeshObject hand9 = new Inter9();
 
     // OpenGL ES 2.0 specific (3D model):
     private int shaderProgramID = 0;
@@ -84,6 +86,9 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
             0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
             -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
             -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
+
+    // For two people:
+    //0.0015046597 -0.9998958 -0.014356505 0.0 -0.8651258 0.005898975 -0.5015204 0.0 0.5015528 0.013174799 -0.8650267 0.0 -0.012435651 0.0058717513 0.12719226 1.0
     float[] invM = new float[]{1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
@@ -245,8 +250,8 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         GLES20.glCullFace(GLES20.GL_BACK);
 
         // Did we find any trackables this frame?
-        state.getNumTrackableResults();
-        if (true)
+       // state.getNumTrackableResults();
+        if (state.getNumTrackableResults() > 0)
         //   if (true)
         {
             if (currObjIdx < 10) {
@@ -300,8 +305,8 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
             }
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
-            //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
-            //           trackableResult.getPose()).getData();
+               float[] modelViewMatrix = Tool.convertPose2GLMatrix(
+                       trackableResult.getPose()).getData();
             Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
                     String.valueOf(modelViewMatrix[1]) + " " +
                     String.valueOf(modelViewMatrix[2]) + " " +
