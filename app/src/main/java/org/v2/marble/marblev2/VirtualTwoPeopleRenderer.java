@@ -16,6 +16,7 @@ import com.vuforia.Vuforia;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -24,7 +25,6 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by chongshao on 9/27/17.
  */
-
 // TODO(chongshao): make different freq: 3 6 9 12 15
 public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl
 {
@@ -51,6 +51,11 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
     private MeshObject hand7 = new Inter7();
     private MeshObject hand8 = new Inter8();
     private MeshObject hand9 = new Inter9();
+
+    private int handIndex = 0;
+    private static final int HAND_INDEX_LIMIT = 9;
+
+    ArrayList<MeshObject> hands = new ArrayList<>();
 
     // OpenGL ES 2.0 specific (3D model):
     private int shaderProgramID = 0;
@@ -104,6 +109,15 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         // the device mode AR/VR and stereo mode
         mSampleAppRenderer = new SampleAppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 0.01f, 5f);
         Matrix.invertM(invM, 0, modelViewMatrix, 0);
+        hands.add(hand1);
+        hands.add(hand2);
+        hands.add(hand3);
+        hands.add(hand4);
+        hands.add(hand5);
+        hands.add(hand6);
+        hands.add(hand7);
+        hands.add(hand8);
+        hands.add(hand9);
     }
 
 
@@ -250,59 +264,22 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         GLES20.glCullFace(GLES20.GL_BACK);
 
         // Did we find any trackables this frame?
-       // state.getNumTrackableResults();
-        if (state.getNumTrackableResults() > 0)
-        //   if (true)
+        state.getNumTrackableResults();
+      //  if (state.getNumTrackableResults() > 0)
+        if (true)
         {
-            if (currObjIdx < 10) {
-                mTeapot = hand1;
-                currObjIdx++;
-                reset();
-            } else if (currObjIdx < 20) {
-                mTeapot = hand2;
-                currObjIdx++;
-                reset();
+            currObjIdx++;
 
-            } else if (currObjIdx < 30) {
-                mTeapot = hand3;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 40) {
-                mTeapot = hand4;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 50) {
-                mTeapot = hand5;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 60) {
-                mTeapot = hand6;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 70) {
-                mTeapot = hand7;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 80) {
-                mTeapot = hand8;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 90) {
-                mTeapot = hand9;
-                currObjIdx++;
-                reset();
-            }
-            else {
+            if (currObjIdx == 10) {
+                mTeapot = hands.get(handIndex);
+                handIndex++;
+                if (handIndex == HAND_INDEX_LIMIT) {
+                    handIndex = 0;
+                }
+                reset(); // TODO(chongshao): this reset may be the thing makes it flashy
                 currObjIdx = 0;
-                reset();
-
             }
+
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
                float[] modelViewMatrix = Tool.convertPose2GLMatrix(
@@ -400,5 +377,4 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
     {
         mTextures = textures;
     }
-
 }
