@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -18,11 +19,35 @@ public class SampleApplicationGLView  extends GLSurfaceView
 {
     private static final String LOGTAG = "Vuforia_SampleGLView";
 
+    private static VirtualHandsRenderer renderer;
+ long previoustime;
+    long currtime;
 
     // Constructor.
     public SampleApplicationGLView(Context context)
     {
+
         super(context);
+        previoustime = System.currentTimeMillis();
+        currtime = System.currentTimeMillis();
+    }
+
+    public void setRenderer2(VirtualHandsRenderer renderer){
+        this.renderer = renderer;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+    if (e.getAction() == MotionEvent.ACTION_UP)
+        currtime = System.currentTimeMillis();
+        long diff = (currtime-previoustime) / 1000;
+        if (diff > 1) {
+            renderer.updateFreq();
+            Log.d("DTL", "touched");
+        }
+        previoustime = currtime;
+        return true;
+
     }
 
 

@@ -55,7 +55,9 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private int handIndex = 0;
     private static final int HAND_INDEX_LIMIT = 9;
-    private static final float STEP_SIZE = 5f; // This number can be 1, 1.25, 1.67, 2.5, 5
+    private float STEP_SIZE = 5f; // This number can be 1, 1.25, 1.67, 2.5, 5
+    private static final float[] STEP_SIZE_LIST = {1f, 1.25f, 1.67f, 2.5f, 5f};
+    private int stepSizeIndex = 0;
 
     ArrayList<MeshObject> hands = new ArrayList<>();
 
@@ -131,8 +133,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
         mSampleAppRenderer.onSurfaceCreated();
     }
-
-
     // Called when the surface changed size.
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -268,7 +268,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         state.getNumTrackableResults();
         if (true) {
             currObjIdx++;
-            if (currObjIdx == 10) {
+            if (currObjIdx == 5) {
                 mTeapot = hands.get(handIndex);
                 handIndex = (int)((float)handIndex + STEP_SIZE);
                 if (handIndex >= HAND_INDEX_LIMIT) {
@@ -282,22 +282,22 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
             reset();
          //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
          //           trackableResult.getPose()).getData();
-            Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
-                         String.valueOf(modelViewMatrix[1]) + " " +
-                    String.valueOf(modelViewMatrix[2]) + " " +
-                    String.valueOf(modelViewMatrix[3]) + " " +
-                    String.valueOf(modelViewMatrix[4]) + " " +
-                    String.valueOf(modelViewMatrix[5]) + " " +
-                    String.valueOf(modelViewMatrix[6]) + " " +
-                    String.valueOf(modelViewMatrix[7]) + " " +
-                    String.valueOf(modelViewMatrix[8]) + " " +
-                    String.valueOf(modelViewMatrix[9]) + " " +
-                    String.valueOf(modelViewMatrix[10]) + " " +
-                    String.valueOf(modelViewMatrix[11]) + " " +
-                    String.valueOf(modelViewMatrix[12]) + " " +
-                    String.valueOf(modelViewMatrix[13]) + " " +
-                    String.valueOf(modelViewMatrix[14]) + " " +
-                    String.valueOf(modelViewMatrix[15]));
+          //  Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
+//                         String.valueOf(modelViewMatrix[1]) + " " +
+//                    String.valueOf(modelViewMatrix[2]) + " " +
+//                    String.valueOf(modelViewMatrix[3]) + " " +
+//                    String.valueOf(modelViewMatrix[4]) + " " +
+//                    String.valueOf(modelViewMatrix[5]) + " " +
+//                    String.valueOf(modelViewMatrix[6]) + " " +
+//                    String.valueOf(modelViewMatrix[7]) + " " +
+//                    String.valueOf(modelViewMatrix[8]) + " " +
+//                    String.valueOf(modelViewMatrix[9]) + " " +
+//                    String.valueOf(modelViewMatrix[10]) + " " +
+//                    String.valueOf(modelViewMatrix[11]) + " " +
+//                    String.valueOf(modelViewMatrix[12]) + " " +
+//                    String.valueOf(modelViewMatrix[13]) + " " +
+//                    String.valueOf(modelViewMatrix[14]) + " " +
+//                    String.valueOf(modelViewMatrix[15]));
 
             // The image target specific result:
             ImageTargetResult imageTargetResult = (ImageTargetResult) trackableResult;
@@ -495,4 +495,13 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         mTextures = textures;
     }
 
+    public void updateFreq() {
+        STEP_SIZE = STEP_SIZE_LIST[stepSizeIndex];
+        stepSizeIndex++;
+
+        if (stepSizeIndex ==5) {
+            stepSizeIndex = 0;
+        }
+
+    }
 }

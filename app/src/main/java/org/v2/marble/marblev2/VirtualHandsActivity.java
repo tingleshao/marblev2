@@ -430,7 +430,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     @Override
     public void onVuforiaUpdate(State state) {
-        Log.d("DDL", "on Vuforia update called");
+      //  Log.d("DDL", "on Vuforia update called");
     }
 
     @Override
@@ -651,6 +651,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
+        mGlView.setRenderer2(mRenderer);
 
     }
 
