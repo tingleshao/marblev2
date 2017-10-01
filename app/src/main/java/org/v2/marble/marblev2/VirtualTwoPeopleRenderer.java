@@ -53,6 +53,7 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
 
     private int handIndex = 0;
     private static final int HAND_INDEX_LIMIT = 9;
+    private static final float STEP_SIZE = 1f;
 
     ArrayList<MeshObject> hands = new ArrayList<>();
 
@@ -265,11 +266,11 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
 
             if (currObjIdx == 10) {
                 mTeapot = hands.get(handIndex);
-                handIndex++;
-                if (handIndex == HAND_INDEX_LIMIT) {
+                handIndex = (int)((float)handIndex + STEP_SIZE);
+                if (handIndex >= HAND_INDEX_LIMIT) {
                     handIndex = 0;
                 }
-         //       reset(); // TODO(chongshao): this reset may be the thing makes it flashy
+         //       reset();
                 currObjIdx = 0;
             }
 

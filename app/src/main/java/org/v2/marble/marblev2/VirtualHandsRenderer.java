@@ -55,6 +55,8 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private int handIndex = 0;
     private static final int HAND_INDEX_LIMIT = 9;
+    private static final float STEP_SIZE = 1f;
+
     ArrayList<MeshObject> hands = new ArrayList<>();
 
     // OpenGL ES 2.0 specific (3D model):
@@ -268,57 +270,20 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         if (true)
      //   if (true)
         {
-            if (currObjIdx < 10) {
-                mTeapot = hand1;
-                currObjIdx++;
-                reset();
-            } else if (currObjIdx < 20) {
-                mTeapot = hand2;
-                currObjIdx++;
-                reset();
+            currObjIdx++;
 
-            } else if (currObjIdx < 30) {
-                mTeapot = hand3;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 40) {
-                mTeapot = hand4;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 50) {
-                mTeapot = hand5;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 60) {
-                mTeapot = hand6;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 70) {
-                mTeapot = hand7;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 80) {
-                mTeapot = hand8;
-                currObjIdx++;
-                reset();
-
-            } else if (currObjIdx < 90) {
-                mTeapot = hand9;
-                currObjIdx++;
-                reset();
-            }
-            else {
+            if (currObjIdx == 10) {
+                mTeapot = hands.get(handIndex);
+                handIndex = (int)((float)handIndex + STEP_SIZE);
+                if (handIndex == HAND_INDEX_LIMIT) {
+                    handIndex = 0;
+                }
+                //       reset(); // TODO(chongshao): this reset may be the thing makes it flashy
                 currObjIdx = 0;
-                reset();
-
             }
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
+            reset();
          //   float[] modelViewMatrix = Tool.convertPose2GLMatrix(
          //           trackableResult.getPose()).getData();
             Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
