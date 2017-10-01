@@ -39,9 +39,6 @@ import java.util.Vector;
 /**
  * Created by chongshao on 9/21/17.
  */
-// TODO(chongshao): make it marker free
-// TODO(chongshao): enable ndk
-// TODO(chongshao): add these image resources
 public class VirtualHandsActivity extends Activity implements SampleApplicationControl, SensorEventListener {
 
     // Enumeration for masking button indices into single integer:
@@ -58,7 +55,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
 
     private DataSet dataSet = null;
 
-    private VirtualTwoPeopleRenderer mRenderer;
+    private VirtualHandsRenderer mRenderer;
 
     private SampleApplicationGLView mGlView;
 
@@ -650,7 +647,7 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
         mGlView = new SampleApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
 
-        mRenderer = new VirtualTwoPeopleRenderer(this, vuforiaAppSession);
+        mRenderer = new VirtualHandsRenderer(this, vuforiaAppSession);
 
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);

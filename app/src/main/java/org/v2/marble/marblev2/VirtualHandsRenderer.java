@@ -55,7 +55,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private int handIndex = 0;
     private static final int HAND_INDEX_LIMIT = 9;
-    private static final float STEP_SIZE = 1f; // This number can be 1, 1.25, 1.67, 2.5, 5
+    private static final float STEP_SIZE = 5f; // This number can be 1, 1.25, 1.67, 2.5, 5
 
     ArrayList<MeshObject> hands = new ArrayList<>();
 
@@ -266,15 +266,12 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
         // Did we find any trackables this frame?
         state.getNumTrackableResults();
-        if (true)
-     //   if (true)
-        {
+        if (true) {
             currObjIdx++;
-
             if (currObjIdx == 10) {
                 mTeapot = hands.get(handIndex);
                 handIndex = (int)((float)handIndex + STEP_SIZE);
-                if (handIndex == HAND_INDEX_LIMIT) {
+                if (handIndex >= HAND_INDEX_LIMIT) {
                     handIndex = 0;
                 }
                 //       reset(); // TODO(chongshao): this reset may be the thing makes it flashy

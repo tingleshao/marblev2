@@ -38,7 +38,7 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
 
     private Vector<Texture> mTextures;
 
-    private MeshObject mTeapot = new Hand();
+    private MeshObject mTeapot = new Inter1();
 
     // TODO(chongshao): make it in one class
     private MeshObject hand1 = new Inter1();
@@ -87,17 +87,20 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
     static private float GREEN_VB_BUTTON[] =  {0.07657f, -0.05352f, 0.10950f, -0.06587f};
 
     //  float[] modelViewMatrix = {0.87753934f, 0.32194763f, -0.35535115f, 0.0f, 0.40119046f, -0.89885277f, 0.17638008f, 0.0f, -0.26262322f, -0.29734397f, -0.917941f, 0.0f, 0.0010600443f, 0.0148388855f, 0.19901177f, 1.0f} ;
-    float[] modelViewMatrix = { 0.6972165f, 0.53568584f, -0.47637162f, 0.0f,
-            0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
-            -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
-            -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
+  //  float[] modelViewMatrix = { 0.6972165f, 0.53568584f, -0.47637162f, 0.0f,
+  //          0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
+   //         -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
+  //          -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
 
     // For two people:
-    //0.0015046597 -0.9998958 -0.014356505 0.0 -0.8651258 0.005898975 -0.5015204 0.0 0.5015528 0.013174799 -0.8650267 0.0 -0.012435651 0.0058717513 0.12719226 1.0
     float[] invM = new float[]{1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             -15.0f, -50.0f, -500.0f, 1.0f};
+    float[] modelViewMatrix = {0.0015046597f, -0.9998958f, -0.014356505f, 0.0f,
+            -0.8651258f, 0.005898975f, -0.5015204f, 0.0f,
+            0.5015528f, 0.013174799f, -0.8650267f, 0.0f,
+            -0.012435651f, 0.0058717513f, 0.12719226f, 1.0f};
 
     public VirtualTwoPeopleRenderer(VirtualHandsActivity activity,
                                 SampleApplicationSession session)
@@ -238,10 +241,11 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
     }
 
     private void reset() {
-        modelViewMatrix = new float[]{ 0.6972165f, 0.53568584f, -0.47637162f, 0.0f,
-                0.7147522f, -0.5704037f, 0.4046838f, 0.0f,
-                -0.05494073f, -0.62263995f, -0.78057736f, 0.0f,
-                -0.003425967f, 0.0032251133f, 0.18447536f, 1.0f};
+
+        modelViewMatrix = new float[]{0.0015046597f, -0.9998958f, -0.014356505f, 0.0f,
+                -0.8651258f, 0.005898975f, -0.5015204f, 0.0f,
+                0.5015528f, 0.013174799f, -0.8650267f, 0.0f,
+                -0.012435651f, 0.0058717513f, 0.12719226f, 1.0f};
     }
 
     // The render function called from SampleAppRendering by using RenderingPrimitives views.
@@ -364,7 +368,6 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         bb.rewind();
 
         return bb;
-
     }
 
 
