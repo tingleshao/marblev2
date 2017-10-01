@@ -55,7 +55,7 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
 
     private int handIndex = 0;
     private static final int HAND_INDEX_LIMIT = 9;
-    private static final float STEP_SIZE = 1f;
+    private static final float STEP_SIZE = 1f; // This number can be 1, 1.25, 1.67, 2.5, 5
 
     ArrayList<MeshObject> hands = new ArrayList<>();
 
@@ -118,7 +118,6 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         hands.add(hand8);
         hands.add(hand9);
     }
-
 
     // Called when the surface is created or recreated.
     @Override
