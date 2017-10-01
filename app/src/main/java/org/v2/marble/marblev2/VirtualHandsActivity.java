@@ -143,11 +143,11 @@ public class VirtualHandsActivity extends Activity implements SampleApplicationC
                 angleChange = new float[3];
                 SensorManager.getAngleChange(angleChange, R, prevR);
             }
-            if (angleChange != null) {
-                VirtualHandsActivity.this.mRenderer.rotate3(angleChange[0]  / (-100.0f * (float) Math.PI));
-                VirtualHandsActivity.this.mRenderer.rotate2(angleChange[1] / (-100.0f * (float) Math.PI));
-                VirtualHandsActivity.this.mRenderer.rotate1(angleChange[2]  / (-100.0f * (float) Math.PI));
-            }
+       //     if (angleChange != null) {
+        //        VirtualHandsActivity.this.mRenderer.rotate3(angleChange[0]  / (-100.0f * (float) Math.PI));
+        //        VirtualHandsActivity.this.mRenderer.rotate2(angleChange[1] / (-100.0f * (float) Math.PI));
+         //       VirtualHandsActivity.this.mRenderer.rotate1(angleChange[2]  / (-100.0f * (float) Math.PI));
+        //    }
             prevR = R;
         }
 

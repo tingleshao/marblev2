@@ -15,6 +15,7 @@ import com.vuforia.Vuforia;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -51,6 +52,10 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
     private MeshObject hand7 = new Hand7();
     private MeshObject hand8 = new Hand8();
     private MeshObject hand9 = new Hand9();
+
+    private int handIndex = 0;
+    private static final int HAND_INDEX_LIMIT = 9;
+    ArrayList<MeshObject> hands = new ArrayList<>();
 
     // OpenGL ES 2.0 specific (3D model):
     private int shaderProgramID = 0;
@@ -101,6 +106,15 @@ public class VirtualHandsRenderer implements GLSurfaceView.Renderer, SampleAppRe
         // the device mode AR/VR and stereo mode
         mSampleAppRenderer = new SampleAppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 0.01f, 5f);
         Matrix.invertM(invM, 0, modelViewMatrix, 0);
+        hands.add(hand1);
+        hands.add(hand2);
+        hands.add(hand3);
+        hands.add(hand4);
+        hands.add(hand5);
+        hands.add(hand6);
+        hands.add(hand7);
+        hands.add(hand8);
+        hands.add(hand9);
     }
 
 

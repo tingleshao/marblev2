@@ -9,7 +9,6 @@ import com.vuforia.Device;
 import com.vuforia.ImageTargetResult;
 import com.vuforia.Renderer;
 import com.vuforia.State;
-import com.vuforia.Tool;
 import com.vuforia.TrackableResult;
 import com.vuforia.Vuforia;
 
@@ -150,19 +149,16 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         initRendering();
     }
 
-    public void setActive(boolean active)
-    {
+    public void setActive(boolean active) {
         mIsActive = active;
 
         if(mIsActive)
             mSampleAppRenderer.configureVideoBackground();
     }
 
-
     // Called to draw the current frame.
     @Override
-    public void onDrawFrame(GL10 gl)
-    {
+    public void onDrawFrame(GL10 gl) {
         if (!mIsActive)
             return;
 
@@ -170,9 +166,7 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
         mSampleAppRenderer.render();
     }
 
-
-    private void initRendering()
-    {
+    private void initRendering() {
         Log.d(LOGTAG, "initRendering");
 
         // Define clear color
@@ -180,8 +174,7 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
                 : 1.0f);
 
         // Now generate the OpenGL texture objects and add settings
-        for (Texture t : mTextures)
-        {
+        for (Texture t : mTextures) {
             GLES20.glGenTextures(1, t.mTextureID, 0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.mTextureID[0]);
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
@@ -276,14 +269,15 @@ public class VirtualTwoPeopleRenderer implements GLSurfaceView.Renderer, SampleA
                 if (handIndex == HAND_INDEX_LIMIT) {
                     handIndex = 0;
                 }
-                reset(); // TODO(chongshao): this reset may be the thing makes it flashy
+         //       reset(); // TODO(chongshao): this reset may be the thing makes it flashy
                 currObjIdx = 0;
             }
 
             // Get the trackable:
             TrackableResult trackableResult = state.getTrackableResult(0);
-               float[] modelViewMatrix = Tool.convertPose2GLMatrix(
-                       trackableResult.getPose()).getData();
+       //        float[] modelViewMatrix = Tool.convertPose2GLMatrix(
+       //                trackableResult.getPose()).getData();
+            reset();
             Log.d("DTL", String.valueOf(modelViewMatrix[0]) + " " +
                     String.valueOf(modelViewMatrix[1]) + " " +
                     String.valueOf(modelViewMatrix[2]) + " " +
